@@ -1,8 +1,8 @@
 # GitHub Daily Development Automation (`daily-dev-log`)
 
-[![Daily Validation](https://github.com/USERNAME/daily-dev-log/actions/workflows/daily-validation.yml/badge.svg)](https://github.com/USERNAME/daily-dev-log/actions/workflows/daily-validation.yml)
-[![Validate on Push](https://github.com/USERNAME/daily-dev-log/actions/workflows/validate-on-push.yml/badge.svg)](https://github.com/USERNAME/daily-dev-log/actions/workflows/validate-on-push.yml)
-[![Automated Maintenance](https://github.com/USERNAME/daily-dev-log/actions/workflows/maintenance.yml/badge.svg)](https://github.com/USERNAME/daily-dev-log/actions/workflows/maintenance.yml)
+[![Daily Validation](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/daily-validation.yml/badge.svg)](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/daily-validation.yml)
+[![Validate on Push](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/validate-on-push.yml/badge.svg)](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/validate-on-push.yml)
+[![Automated Maintenance](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/maintenance.yml/badge.svg)](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/maintenance.yml)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
