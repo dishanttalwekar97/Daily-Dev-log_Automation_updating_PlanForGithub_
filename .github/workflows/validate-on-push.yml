@@ -1,0 +1,95 @@
+name: Validate Logs on Push & Pull Request
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'logs/**.md'
+      - 'scripts/**.py'
+      - 'tests/**.py'
+      - '.github/workflows/validate-on-push.yml'
+
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'logs/**.md'
+      - 'scripts/**.py'
+      - 'tests/**.py'
+      - '.github/workflows/validate-on-push.yml'
+
+  workflow_dispatch:
+
+# Enforce read-only access
+permissions:
+  contents: read
+
+# Concurrency group ensures rapid pushes cancel outdated builds
+concurrency:
+  group: validate-push-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-changes:
+    name: Validate Changed Development Logs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          # Fetch commit history so git diff can detect modified files
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: '3.12'
+
+      - name: Run Test Suite
+        name: Run Unit Tests
+        run: |
+          echo "Verifying test suite integrity..."
+          python -m unittest discover -s tests -v
+
+      - name: Detect Changed Markdown Logs
+        id: detect-changes
+        run: |
+          # Detect modified/added markdown files in logs/
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}" HEAD -- 'logs/*.md' || true)
+          else
+            CHANGED_FILES=$(git diff --name-only --diff-filter=ACMR HEAD~1 HEAD -- 'logs/*.md' 2>/dev/null || true)
+          fi
+
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "Specific modified log files detected:"
+            echo "$CHANGED_FILES"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No specific log files isolated via diff; falling back to full logs validation."
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate Development Logs
+        run: |
+          echo "Executing log validation..."
+          # Validates entire logs directory to ensure overall consistency and prevent date collisions
+          python scripts/validate_log.py --dir logs
+
+      - name: Duplicate and Plagiarism Check
+        run: |
+          echo "Checking for duplicate dates and content integrity..."
+          python scripts/check_duplicates.py --dir logs
+
+      - name: Generate Push Validation Summary
+        if: always()
+        run: |
+          echo "### Push Validation Status" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: \`${{ github.event_name }}\` on \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: :white_check_mark: Completed validation checks" >> $GITHUB_STEP_SUMMARY

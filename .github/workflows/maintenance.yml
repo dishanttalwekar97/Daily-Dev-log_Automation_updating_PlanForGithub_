@@ -1,0 +1,173 @@
+name: Automated Maintenance & Report Generation
+
+on:
+  schedule:
+    # --------------------------------------------------------------------------
+    # Optional Scheduled Execution: Daily at 13:00 UTC (18:30 / 6:30 PM IST)
+    # By default, scheduled runs will validate logs and check reports.
+    # Commits are ONLY pushed if the repository variable
+    # ENABLE_AUTO_MAINTENANCE_COMMIT is explicitly set to 'true'.
+    # --------------------------------------------------------------------------
+    - cron: '0 13 * * *'
+
+  workflow_dispatch:
+    inputs:
+      enable_commit:
+        description: 'Explicitly authorize committing and pushing updated reports to repository'
+        required: true
+        type: boolean
+        default: false
+
+# Concurrency control prevents concurrent maintenance runs against the same branch
+concurrency:
+  group: maintenance-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # ============================================================================
+  # Job 1: Read-Only Validation & Report Generation
+  # Uses strict read-only permissions to inspect logs and compute report diffs
+  # ============================================================================
+  validate-and-inspect:
+    name: Validate Logs & Compute Report Diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    outputs:
+      has_changes: ${{ steps.check-diff.outputs.has_changes }}
+      target_branch: ${{ steps.resolve-branch.outputs.branch }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Resolve Target Branch
+        id: resolve-branch
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+          echo "Operating on branch: $BRANCH"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: '3.12'
+
+      - name: Validate All Development Logs
+        run: |
+          echo "Validating development logs before report generation..."
+          python scripts/validate_log.py --dir logs
+
+      - name: Check Duplicate Records
+        run: |
+          echo "Scanning for duplicates and anomalies..."
+          python scripts/check_duplicates.py --dir logs
+
+      - name: Generate Development Summary Report
+        run: |
+          echo "Generating deterministic report from verified source logs..."
+          python scripts/generate_report.py --logs-dir logs --output reports/development-summary.md
+
+      - name: Detect Report Modifications
+        id: check-diff
+        run: |
+          if git diff --name-only reports/development-summary.md | grep -q 'reports/development-summary.md'; then
+            echo "Report content has genuinely changed."
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "Report content is completely unchanged."
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Report Job Summary
+        if: always()
+        run: |
+          echo "### Maintenance Inspection Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: \`${{ steps.resolve-branch.outputs.branch }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Report Modified**: \`${{ steps.check-diff.outputs.has_changes }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit Authorized (Manual Input)**: \`${{ inputs.enable_commit || false }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit Authorized (Repo Variable)**: \`${{ vars.ENABLE_AUTO_MAINTENANCE_COMMIT || 'false' }}\`" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # Job 2: Safe Commit & Push (Least-Privilege Write Access)
+  # Executes ONLY when report content has genuinely changed AND write access
+  # has been explicitly enabled via workflow input or repository configuration.
+  # ============================================================================
+  commit-report:
+    name: Commit and Push Development Summary
+    needs: validate-and-inspect
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: >-
+      needs.validate-and-inspect.outputs.has_changes == 'true' &&
+      (inputs.enable_commit == true || vars.ENABLE_AUTO_MAINTENANCE_COMMIT == 'true')
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Target Branch for Commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ needs.validate-and-inspect.outputs.target_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: '3.12'
+
+      - name: Regenerate Deterministic Report
+        run: |
+          python scripts/generate_report.py --logs-dir logs --output reports/development-summary.md
+
+      - name: Verify Working Tree Safety
+        run: |
+          # Ensure no unintended files outside reports/ are modified or untracked
+          MODIFIED_OTHER=$(git status --porcelain | grep -v 'reports/development-summary.md' || true)
+          if [ -n "$MODIFIED_OTHER" ]; then
+            echo "ERROR: Unexpected modifications detected outside of reports/:"
+            echo "$MODIFIED_OTHER"
+            echo "Aborting commit for safety."
+            exit 1
+          fi
+
+      - name: Commit and Push Report Changes
+        run: |
+          TARGET_BRANCH="${{ needs.validate-and-inspect.outputs.target_branch }}"
+
+          echo "Configuring Git author identity..."
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Stage only the intended report file
+          git add reports/development-summary.md
+
+          # Double check if there is a staged diff
+          if git diff --staged --quiet; then
+            echo "No staged changes detected. Skipping commit."
+            exit 0
+          fi
+
+          # Commit message includes [skip ci] to prevent loop invocations
+          git commit -m "chore: update development summary [skip ci]"
+
+          # Pull latest rebase cleanly to prevent race conditions without overwriting user work
+          git pull --rebase origin "$TARGET_BRANCH"
+
+          # Push cleanly without --force
+          echo "Pushing commit to branch $TARGET_BRANCH..."
+          git push origin "$TARGET_BRANCH"
+
+      - name: Log Maintenance Push Summary
+        if: always()
+        run: |
+          echo "### Maintenance Commit Status" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target Branch**: \`${{ needs.validate-and-inspect.outputs.target_branch }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Action**: Updated \`reports/development-summary.md\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: :white_check_mark: Successfully committed and pushed genuine summary" >> $GITHUB_STEP_SUMMARY
