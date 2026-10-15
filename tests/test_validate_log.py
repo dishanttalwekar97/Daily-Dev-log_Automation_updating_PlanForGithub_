@@ -318,5 +318,52 @@ class TestDuplicateDetector(unittest.TestCase):
         self.assertTrue(any(f.category == "Identical Content" for f in findings))
 
 
+from scripts.auto_daily_log import create_daily_log, generate_log_content, get_topic_for_date
+
+
+class TestAutoDailyLog(unittest.TestCase):
+    """Tests for the automated daily log generator."""
+
+    def setUp(self) -> None:
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.test_dir = Path(self.temp_dir.name)
+
+    def tearDown(self) -> None:
+        self.temp_dir.cleanup()
+
+    def test_generated_content_validates_successfully(self) -> None:
+        """Verify that auto-generated log content passes all validator rules."""
+        test_date = datetime.date(2026, 11, 1)
+        content = generate_log_content(test_date)
+        file_path = self.test_dir / "2026-11-01.md"
+        file_path.write_text(content, encoding="utf-8")
+
+        validator = LogValidator(self.test_dir)
+        result = validator.validate_file(file_path)
+        self.assertTrue(result.is_valid, f"Validation failed: {result.errors}")
+
+    def test_consecutive_days_have_unique_topics(self) -> None:
+        """Verify that consecutive days generate distinct topics without duplicate warnings."""
+        date1 = datetime.date(2026, 11, 1)
+        date2 = datetime.date(2026, 11, 2)
+
+        create_daily_log(date1, self.test_dir)
+        create_daily_log(date2, self.test_dir)
+
+        findings = find_duplicates(self.test_dir, similarity_threshold=0.88)
+        self.assertEqual(len(findings), 0, f"Unexpected duplicates found: {findings}")
+
+    def test_skip_existing_unless_forced(self) -> None:
+        """Verify that existing logs are not overwritten unless force=True."""
+        test_date = datetime.date(2026, 11, 3)
+        created1, path, _ = create_daily_log(test_date, self.test_dir)
+        self.assertTrue(created1)
+
+        # Second call without force should not recreate
+        created2, _, msg = create_daily_log(test_date, self.test_dir, force=False)
+        self.assertFalse(created2)
+        self.assertIn("already exists", msg)
+
+
 if __name__ == "__main__":
     unittest.main()

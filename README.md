@@ -1,5 +1,6 @@
 # GitHub Daily Development Automation (`daily-dev-log`)
 
+[![Daily Auto Logger](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/daily-auto-logger.yml/badge.svg)](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/daily-auto-logger.yml)
 [![Daily Validation](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/daily-validation.yml/badge.svg)](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/daily-validation.yml)
 [![Validate on Push](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/validate-on-push.yml/badge.svg)](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/validate-on-push.yml)
 [![Automated Maintenance](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/maintenance.yml/badge.svg)](https://github.com/dishanttalwekar97/Daily-Dev-log_Automation_updating_PlanForGithub_/actions/workflows/maintenance.yml)
@@ -94,27 +95,33 @@ daily-dev-log/
 │
 ├── .github/
 │   └── workflows/
+│       ├── daily-auto-logger.yml  # Autonomous daily log generator, tester & committer
 │       ├── daily-validation.yml   # Daily scheduled health check & validation
 │       ├── validate-on-push.yml   # Push and PR trigger validation & test runner
 │       └── maintenance.yml        # Report generation with safe conditional commit
 │
 ├── logs/
-│   └── .gitkeep                   # Tracks the logs folder where daily logs reside
+│   ├── .gitkeep                   # Tracks the logs folder where daily logs reside
+│   ├── 2026-10-14.md              # Verified daily development log
+│   └── 2026-10-15.md              # Verified daily development log
 │
 ├── scripts/
+│   ├── auto_daily_log.py          # Auto-generates unique, schema-compliant daily logs
 │   ├── validate_log.py            # Log validation engine (dates, headings, content)
 │   ├── generate_report.py         # Compiles development-summary.md from real logs
 │   └── check_duplicates.py        # Duplicate dates, file collision, and similarity checks
 │
 ├── reports/
-│   └── .gitkeep                   # Tracks the folder where summary reports are saved
+│   ├── .gitkeep                   # Tracks the folder where summary reports are saved
+│   └── development-summary.md     # Auto-generated aggregate activity summary
 │
 ├── tests/
-│   └── test_validate_log.py       # Comprehensive unit tests (13 test scenarios)
+│   └── test_validate_log.py       # Comprehensive unit tests (16 test scenarios)
 │
 ├── templates/
 │   └── daily-log-template.md      # Standardized daily development journal template
 │
+├── run_daily_automation.ps1       # 1-click local PowerShell automation runner
 ├── .gitignore                     # Ignores caches, environments, and temporary files
 ├── README.md                      # Complete system documentation and guides
 ├── CONTRIBUTING.md                # Contribution workflow and guidelines
@@ -233,13 +240,28 @@ Daily records reside inside the `logs/` directory. Each entry file must be named
 
 ## 8. GitHub Actions Configuration
 
-This project includes three specialized workflows in `.github/workflows/`:
+This project includes four specialized workflows in `.github/workflows/`:
 
 | Workflow File | Trigger | Purpose | Permissions |
 |---|---|---|---|
-| `daily-validation.yml` | Scheduled (12:30 UTC) & `workflow_dispatch` | Daily health check of all logs | `contents: read` |
-| `validate-on-push.yml` | `push` & `pull_request` on `logs/**.md` | Validates new logs & runs unit tests | `contents: read` |
+| `daily-auto-logger.yml` | Scheduled (14:00 UTC) & `workflow_dispatch` | **100% Autonomous daily logger**: creates today's log, tests, updates report & pushes to GitHub | `contents: write` |
+| `daily-validation.yml` | Scheduled (12:30 UTC) & `workflow_dispatch` | Daily scheduled health check & validation of all logs | `contents: read` |
+| `validate-on-push.yml` | `push` & `pull_request` on `logs/**.md` | Validates new logs & runs unit tests on code changes | `contents: read` |
 | `maintenance.yml` | Scheduled (13:00 UTC) & `workflow_dispatch` | Generates summary reports and safe conditional commit | Job 1: `read`<br>Job 2: `write` (conditional) |
+
+### 100% Zero-Touch Automation Setup
+
+To let GitHub Actions run and push commits automatically every day without touching any files:
+
+1. Open your repository on GitHub.
+2. Click **Settings** (top navigation bar of the repository).
+3. In the left sidebar, click **Actions** -> **General**.
+4. Scroll down to **Workflow permissions**.
+5. Select **"Read and write permissions"**.
+6. Check **"Allow GitHub Actions to create and approve pull requests"**.
+7. Click **Save**.
+
+Once saved, GitHub Actions will automatically generate a new development log entry every single day, update `reports/development-summary.md`, and commit & push it directly to your repository with your GitHub author attribution. You never have to manually edit or push any file.
 
 ### Pinned Actions
 All third-party actions are pinned to immutable commit SHAs with version comments (e.g., `actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2`). This prevents supply chain tampering and unexpected upstream breakages.
