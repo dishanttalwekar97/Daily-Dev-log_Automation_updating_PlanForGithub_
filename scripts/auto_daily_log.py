@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import hashlib
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -558,6 +559,11 @@ def main() -> int:
         action="store_true",
         help="Suppress informational output",
     )
+    parser.add_argument(
+        "--get-theme",
+        action="store_true",
+        help="Print only the topic theme for the target date and exit",
+    )
 
     args = parser.parse_args()
 
@@ -570,6 +576,22 @@ def main() -> int:
         except ValueError:
             print(f"ERROR: Invalid date format '{args.date}'. Expected YYYY-MM-DD.", file=sys.stderr)
             return 1
+
+    topic = get_topic_for_date(target_date)
+
+    if args.get_theme:
+        print(topic["theme"])
+        return 0
+
+    # Export theme and log_date if running under GitHub Actions
+    gh_output = os.environ.get("GITHUB_OUTPUT")
+    if gh_output:
+        try:
+            with open(gh_output, "a", encoding="utf-8") as f:
+                f.write(f"theme={topic['theme']}\n")
+                f.write(f"log_date={target_date.isoformat()}\n")
+        except Exception:
+            pass
 
     root_dir = Path(__file__).resolve().parent.parent
     logs_dir = (root_dir / args.logs_dir) if not args.logs_dir.is_absolute() else args.logs_dir

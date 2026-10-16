@@ -63,7 +63,14 @@ if ([string]::IsNullOrWhiteSpace($status)) {
         Write-Host "`n[GIT] Committing and pushing to GitHub..." -ForegroundColor Yellow
         git add logs/ reports/
         $todayStr = (Get-Date).ToString("yyyy-MM-dd")
-        git commit -m "docs(log): add automated daily dev log for $todayStr"
+        $theme = python scripts/auto_daily_log.py --date today --get-theme
+        if ([string]::IsNullOrWhiteSpace($theme)) {
+            $commitMsg = "docs(journal): daily engineering journal for $todayStr"
+        } else {
+            $commitMsg = "docs(journal): notes on $theme ($todayStr)"
+        }
+        Write-Host "  [COMMIT] $commitMsg" -ForegroundColor Gray
+        git commit -m "$commitMsg"
         git pull --rebase origin main
         git push origin main
         Write-Host "  [OK] Successfully pushed daily update to GitHub!" -ForegroundColor Green
