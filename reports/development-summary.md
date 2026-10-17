@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `3` |
+| **Total Development Logs** | `4` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-10-16` |
-| **Recorded Learning Items** | `9` |
-| **Recorded Development Tasks** | `9` |
+| **Latest Recorded Entry** | `2026-10-17` |
+| **Recorded Learning Items** | `12` |
+| **Recorded Development Tasks** | `12` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-10-17](../logs/2026-10-17.md)
+
+**Development Highlights:**
+- Implemented transactional outbox pattern to guarantee atomic database updates and event publishing.
+- Created event dispatcher service decoupling order fulfillment workflows from user checkout handlers.
+- Added event schema definitions with versioning metadata and published timestamps.
+
+**Learning Highlights:**
+- Studied Event-Driven Architecture (EDA) principles, outbox pattern, and change data capture (CDC).
+- Explored event schema versioning, event sourcing concepts, and eventual consistency guarantees.
+- Researched idempotent event consumers and consumer lag monitoring.
+
+**Problems Addressed:**
+- Eliminated dual-write failure vulnerabilities where database commits succeeded but message publishing failed.
+- Resolved transaction lock contention by moving non-critical notification delivery out of the main database transaction.
+
+**Next Steps:**
+- Implement dead-letter reprocessing tooling for failed event consumers.
+- Benchmark outbox poller throughput and tune batch fetch limits.
 
 ### [2026-10-16](../logs/2026-10-16.md)
 
@@ -81,6 +101,7 @@ Recent entries in reverse chronological order:
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-10-17` | [2026-10-17.md](../logs/2026-10-17.md) | 3 | 3 | Complete |
 | `2026-10-16` | [2026-10-16.md](../logs/2026-10-16.md) | 3 | 3 | Complete |
 | `2026-10-15` | [2026-10-15.md](../logs/2026-10-15.md) | 3 | 3 | Complete |
 | `2026-10-14` | [2026-10-14.md](../logs/2026-10-14.md) | 3 | 3 | Complete |
