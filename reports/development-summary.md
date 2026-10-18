@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `4` |
+| **Total Development Logs** | `5` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-10-17` |
-| **Recorded Learning Items** | `12` |
-| **Recorded Development Tasks** | `12` |
+| **Latest Recorded Entry** | `2026-10-18` |
+| **Recorded Learning Items** | `15` |
+| **Recorded Development Tasks** | `15` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-10-18](../logs/2026-10-18.md)
+
+**Development Highlights:**
+- Refactored Dockerfiles across backend services into multi-stage builds separating build tools from runtime.
+- Replaced bloated base images with lightweight distroless Python runtime containers.
+- Configured non-root user execution inside containers to follow the principle of least privilege.
+
+**Learning Highlights:**
+- Explored Linux cgroups v2, namespaces, and security contexts inside OCI container runtimes.
+- Studied Docker layer caching mechanics, order of instructions, and buildkit cache mount features.
+- Researched minimal base images (Alpine vs distroless) and vulnerability scanning with Trivy.
+
+**Problems Addressed:**
+- Reduced final container image footprint from 890MB down to 112MB, speeding up deployment pull times by 75%.
+- Eliminated 14 high and medium CVE vulnerabilities by stripping development compiler toolchains from final images.
+
+**Next Steps:**
+- Incorporate automated container image vulnerability scanning into GitHub Actions CI pipeline.
+- Set up docker compose override templates for local development ergonomics.
 
 ### [2026-10-17](../logs/2026-10-17.md)
 
@@ -101,6 +121,7 @@ Recent entries in reverse chronological order:
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-10-18` | [2026-10-18.md](../logs/2026-10-18.md) | 3 | 3 | Complete |
 | `2026-10-17` | [2026-10-17.md](../logs/2026-10-17.md) | 3 | 3 | Complete |
 | `2026-10-16` | [2026-10-16.md](../logs/2026-10-16.md) | 3 | 3 | Complete |
 | `2026-10-15` | [2026-10-15.md](../logs/2026-10-15.md) | 3 | 3 | Complete |
