@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `14` |
+| **Total Development Logs** | `15` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-10-27` |
-| **Recorded Learning Items** | `42` |
-| **Recorded Development Tasks** | `42` |
+| **Latest Recorded Entry** | `2026-10-28` |
+| **Recorded Learning Items** | `45` |
+| **Recorded Development Tasks** | `45` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-10-28](../logs/2026-10-28.md)
+
+**Development Highlights:**
+- Defined clear protobuf service contracts for internal inventory and pricing communication.
+- Implemented gRPC unary and server-streaming service handlers with strict deadline propagation.
+- Created automated code-generation build steps compiling .proto files into typed client stubs.
+
+**Learning Highlights:**
+- Studied binary serialization protocols, Protocol Buffers (protobuf), and HTTP/2 multiplexing benefits.
+- Researched gRPC streaming patterns: unary, server-streaming, client-streaming, and bidirectional streaming.
+- Explored service discovery, client-side load balancing, and gRPC deadline propagation.
+
+**Problems Addressed:**
+- Eliminated network bandwidth overhead of verbose JSON payloads, reducing internal payload size by 62%.
+- Fixed head-of-line blocking between internal microservices by leveraging HTTP/2 multiplexed TCP connections.
+
+**Next Steps:**
+- Implement gRPC interceptors for distributed tracing and centralized error handling.
+- Configure envoy proxy for gRPC-web compatibility with browser clients.
 
 ### [2026-10-27](../logs/2026-10-27.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Implement dead-letter reprocessing tooling for failed event consumers.
 - Benchmark outbox poller throughput and tune batch fetch limits.
 
-### [2026-10-18](../logs/2026-10-18.md)
-
-**Development Highlights:**
-- Refactored Dockerfiles across backend services into multi-stage builds separating build tools from runtime.
-- Replaced bloated base images with lightweight distroless Python runtime containers.
-- Configured non-root user execution inside containers to follow the principle of least privilege.
-
-**Learning Highlights:**
-- Explored Linux cgroups v2, namespaces, and security contexts inside OCI container runtimes.
-- Studied Docker layer caching mechanics, order of instructions, and buildkit cache mount features.
-- Researched minimal base images (Alpine vs distroless) and vulnerability scanning with Trivy.
-
-**Problems Addressed:**
-- Reduced final container image footprint from 890MB down to 112MB, speeding up deployment pull times by 75%.
-- Eliminated 14 high and medium CVE vulnerabilities by stripping development compiler toolchains from final images.
-
-**Next Steps:**
-- Incorporate automated container image vulnerability scanning into GitHub Actions CI pipeline.
-- Set up docker compose override templates for local development ergonomics.
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-10-28` | [2026-10-28.md](../logs/2026-10-28.md) | 3 | 3 | Complete |
 | `2026-10-27` | [2026-10-27.md](../logs/2026-10-27.md) | 3 | 3 | Complete |
 | `2026-10-26` | [2026-10-26.md](../logs/2026-10-26.md) | 3 | 3 | Complete |
 | `2026-10-25` | [2026-10-25.md](../logs/2026-10-25.md) | 3 | 3 | Complete |
