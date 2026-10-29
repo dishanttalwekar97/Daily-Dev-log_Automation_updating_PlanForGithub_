@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `15` |
+| **Total Development Logs** | `16` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-10-28` |
-| **Recorded Learning Items** | `45` |
-| **Recorded Development Tasks** | `45` |
+| **Latest Recorded Entry** | `2026-10-29` |
+| **Recorded Learning Items** | `48` |
+| **Recorded Development Tasks** | `48` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-10-29](../logs/2026-10-29.md)
+
+**Development Highlights:**
+- Implemented rate-limiting middleware in the API gateway service.
+- Configured sliding-window rate tracking using in-memory and Redis persistence.
+- Added comprehensive automated unit tests for burst traffic and threshold enforcement.
+
+**Learning Highlights:**
+- Studied token bucket and leaky bucket algorithms for distributed API rate limiting.
+- Researched HTTP 429 Too Many Requests response headers (Retry-After, X-RateLimit-Remaining).
+- Explored Redis-backed distributed atomic counters using Lua scripting.
+
+**Problems Addressed:**
+- Resolved race condition in concurrent request quota tracking by replacing GET/SET with an atomic Lua script.
+- Fixed timestamp precision truncation issue in sliding-window interval calculations.
+
+**Next Steps:**
+- Deploy rate limiting middleware to staging environment and conduct load testing with locust.
+- Add per-client API key tier quotas (free vs premium limits).
 
 ### [2026-10-28](../logs/2026-10-28.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Benchmark cache hit ratio under simulated production traffic loads.
 - Implement Redis cluster failover health monitoring and reconnection backoff.
 
-### [2026-10-19](../logs/2026-10-19.md)
-
-**Development Highlights:**
-- Implemented transactional outbox pattern to guarantee atomic database updates and event publishing.
-- Created event dispatcher service decoupling order fulfillment workflows from user checkout handlers.
-- Added event schema definitions with versioning metadata and published timestamps.
-
-**Learning Highlights:**
-- Studied Event-Driven Architecture (EDA) principles, outbox pattern, and change data capture (CDC).
-- Explored event schema versioning, event sourcing concepts, and eventual consistency guarantees.
-- Researched idempotent event consumers and consumer lag monitoring.
-
-**Problems Addressed:**
-- Eliminated dual-write failure vulnerabilities where database commits succeeded but message publishing failed.
-- Resolved transaction lock contention by moving non-critical notification delivery out of the main database transaction.
-
-**Next Steps:**
-- Implement dead-letter reprocessing tooling for failed event consumers.
-- Benchmark outbox poller throughput and tune batch fetch limits.
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-10-29` | [2026-10-29.md](../logs/2026-10-29.md) | 3 | 3 | Complete |
 | `2026-10-28` | [2026-10-28.md](../logs/2026-10-28.md) | 3 | 3 | Complete |
 | `2026-10-27` | [2026-10-27.md](../logs/2026-10-27.md) | 3 | 3 | Complete |
 | `2026-10-26` | [2026-10-26.md](../logs/2026-10-26.md) | 3 | 3 | Complete |
