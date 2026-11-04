@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `21` |
+| **Total Development Logs** | `22` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-11-03` |
-| **Recorded Learning Items** | `63` |
-| **Recorded Development Tasks** | `63` |
+| **Latest Recorded Entry** | `2026-11-04` |
+| **Recorded Learning Items** | `66` |
+| **Recorded Development Tasks** | `66` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-11-04](../logs/2026-11-04.md)
+
+**Development Highlights:**
+- Implemented rate-limiting middleware in the API gateway service.
+- Configured sliding-window rate tracking using in-memory and Redis persistence.
+- Added comprehensive automated unit tests for burst traffic and threshold enforcement.
+
+**Learning Highlights:**
+- Studied token bucket and leaky bucket algorithms for distributed API rate limiting.
+- Researched HTTP 429 Too Many Requests response headers (Retry-After, X-RateLimit-Remaining).
+- Explored Redis-backed distributed atomic counters using Lua scripting.
+
+**Problems Addressed:**
+- Resolved race condition in concurrent request quota tracking by replacing GET/SET with an atomic Lua script.
+- Fixed timestamp precision truncation issue in sliding-window interval calculations.
+
+**Next Steps:**
+- Deploy rate limiting middleware to staging environment and conduct load testing with locust.
+- Add per-client API key tier quotas (free vs premium limits).
 
 ### [2026-11-03](../logs/2026-11-03.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Benchmark cache hit ratio under simulated production traffic loads.
 - Implement Redis cluster failover health monitoring and reconnection backoff.
 
-### [2026-10-25](../logs/2026-10-25.md)
-
-**Development Highlights:**
-- Defined clear protobuf service contracts for internal inventory and pricing communication.
-- Implemented gRPC unary and server-streaming service handlers with strict deadline propagation.
-- Created automated code-generation build steps compiling .proto files into typed client stubs.
-
-**Learning Highlights:**
-- Studied binary serialization protocols, Protocol Buffers (protobuf), and HTTP/2 multiplexing benefits.
-- Researched gRPC streaming patterns: unary, server-streaming, client-streaming, and bidirectional streaming.
-- Explored service discovery, client-side load balancing, and gRPC deadline propagation.
-
-**Problems Addressed:**
-- Eliminated network bandwidth overhead of verbose JSON payloads, reducing internal payload size by 62%.
-- Fixed head-of-line blocking between internal microservices by leveraging HTTP/2 multiplexed TCP connections.
-
-**Next Steps:**
-- Implement gRPC interceptors for distributed tracing and centralized error handling.
-- Configure envoy proxy for gRPC-web compatibility with browser clients.
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-11-04` | [2026-11-04.md](../logs/2026-11-04.md) | 3 | 3 | Complete |
 | `2026-11-03` | [2026-11-03.md](../logs/2026-11-03.md) | 3 | 3 | Complete |
 | `2026-11-02` | [2026-11-02.md](../logs/2026-11-02.md) | 3 | 3 | Complete |
 | `2026-11-01` | [2026-11-01.md](../logs/2026-11-01.md) | 3 | 3 | Complete |
