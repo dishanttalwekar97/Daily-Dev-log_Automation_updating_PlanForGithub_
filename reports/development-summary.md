@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `27` |
+| **Total Development Logs** | `28` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-11-09` |
-| **Recorded Learning Items** | `81` |
-| **Recorded Development Tasks** | `81` |
+| **Latest Recorded Entry** | `2026-11-10` |
+| **Recorded Learning Items** | `84` |
+| **Recorded Development Tasks** | `84` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-11-10](../logs/2026-11-10.md)
+
+**Development Highlights:**
+- Implemented rate-limiting middleware in the API gateway service.
+- Configured sliding-window rate tracking using in-memory and Redis persistence.
+- Added comprehensive automated unit tests for burst traffic and threshold enforcement.
+
+**Learning Highlights:**
+- Studied token bucket and leaky bucket algorithms for distributed API rate limiting.
+- Researched HTTP 429 Too Many Requests response headers (Retry-After, X-RateLimit-Remaining).
+- Explored Redis-backed distributed atomic counters using Lua scripting.
+
+**Problems Addressed:**
+- Resolved race condition in concurrent request quota tracking by replacing GET/SET with an atomic Lua script.
+- Fixed timestamp precision truncation issue in sliding-window interval calculations.
+
+**Next Steps:**
+- Deploy rate limiting middleware to staging environment and conduct load testing with locust.
+- Add per-client API key tier quotas (free vs premium limits).
 
 ### [2026-11-09](../logs/2026-11-09.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Implement multi-factor authentication (MFA) with TOTP QR-code generation.
 - Conduct automated security scan with OWASP ZAP on authentication endpoints.
 
-### [2026-10-31](../logs/2026-10-31.md)
-
-**Development Highlights:**
-- Refactored Dockerfiles across backend services into multi-stage builds separating build tools from runtime.
-- Replaced bloated base images with lightweight distroless Python runtime containers.
-- Configured non-root user execution inside containers to follow the principle of least privilege.
-
-**Learning Highlights:**
-- Explored Linux cgroups v2, namespaces, and security contexts inside OCI container runtimes.
-- Studied Docker layer caching mechanics, order of instructions, and buildkit cache mount features.
-- Researched minimal base images (Alpine vs distroless) and vulnerability scanning with Trivy.
-
-**Problems Addressed:**
-- Reduced final container image footprint from 890MB down to 112MB, speeding up deployment pull times by 75%.
-- Eliminated 14 high and medium CVE vulnerabilities by stripping development compiler toolchains from final images.
-
-**Next Steps:**
-- Incorporate automated container image vulnerability scanning into GitHub Actions CI pipeline.
-- Set up docker compose override templates for local development ergonomics.
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-11-10` | [2026-11-10.md](../logs/2026-11-10.md) | 3 | 3 | Complete |
 | `2026-11-09` | [2026-11-09.md](../logs/2026-11-09.md) | 3 | 3 | Complete |
 | `2026-11-08` | [2026-11-08.md](../logs/2026-11-08.md) | 3 | 3 | Complete |
 | `2026-11-07` | [2026-11-07.md](../logs/2026-11-07.md) | 3 | 3 | Complete |
