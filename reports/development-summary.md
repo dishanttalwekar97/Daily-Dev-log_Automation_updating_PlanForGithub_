@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `34` |
+| **Total Development Logs** | `35` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-11-16` |
-| **Recorded Learning Items** | `102` |
-| **Recorded Development Tasks** | `102` |
+| **Latest Recorded Entry** | `2026-11-17` |
+| **Recorded Learning Items** | `105` |
+| **Recorded Development Tasks** | `105` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-11-17](../logs/2026-11-17.md)
+
+**Development Highlights:**
+- Implemented structured JSON logging across all backend services with correlation ID tracking.
+- Added HTTP request duration histogram metrics and error rate counters exposed on /metrics endpoint.
+- Integrated OpenTelemetry trace context middleware into inbound and outbound HTTP clients.
+
+**Learning Highlights:**
+- Studied the Three Pillars of Observability: structured metrics, distributed traces, and contextualized logs.
+- Researched OpenTelemetry (OTel) instrumentation standards, span propagators, and baggage items.
+- Explored Prometheus metric types: Counter, Gauge, Histogram, and Summary with quantile calculations.
+
+**Problems Addressed:**
+- Eliminated fragmented log lines across microservices by propagating X-Correlation-ID headers across network boundaries.
+- Diagnosed intermittent 504 gateway timeout by tracing downstream third-party payment gateway latency spikes.
+
+**Next Steps:**
+- Build Grafana dashboard visualizing service error rates, p95/p99 latency distributions, and active connections.
+- Configure alertmanager rules for error budget burns and high memory utilization.
 
 ### [2026-11-16](../logs/2026-11-16.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Set up automated SAST (Static Application Security Testing) scanning using Bandit in CI.
 - Perform secret audit to ensure zero API keys or credentials exist in git history.
 
-### [2026-11-07](../logs/2026-11-07.md)
-
-**Development Highlights:**
-- Audited slow query logs and identified top 5 high-latency reporting queries.
-- Added composite index on (tenant_id, created_at DESC) to optimize the dashboard timeline feed.
-- Refactored ORM queries to prevent N+1 query patterns by using eager loading joins.
-
-**Learning Highlights:**
-- Deep-dived into relational database B-tree index internals, leaf node splits, and composite index column ordering.
-- Analyzed EXPLAIN ANALYZE execution plans, focusing on sequential scans versus index scan costs.
-- Studied index selectivity, partial indexes, and covering indexes (INCLUDE clause).
-
-**Problems Addressed:**
-- Eliminated sequential table scans across 500,000+ records, reducing p95 query latency from 840ms to 28ms.
-- Resolved connection pool exhaustion caused by unindexed filtering on large unpartitioned tables.
-
-**Next Steps:**
-- Implement automated slow-query alerting via Slack webhook.
-- Evaluate table partitioning strategies for historical audit logs older than 90 days.
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-11-17` | [2026-11-17.md](../logs/2026-11-17.md) | 3 | 3 | Complete |
 | `2026-11-16` | [2026-11-16.md](../logs/2026-11-16.md) | 3 | 3 | Complete |
 | `2026-11-15` | [2026-11-15.md](../logs/2026-11-15.md) | 3 | 3 | Complete |
 | `2026-11-14` | [2026-11-14.md](../logs/2026-11-14.md) | 3 | 3 | Complete |
