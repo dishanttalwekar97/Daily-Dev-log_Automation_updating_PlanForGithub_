@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `37` |
+| **Total Development Logs** | `38` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-11-19` |
-| **Recorded Learning Items** | `111` |
-| **Recorded Development Tasks** | `111` |
+| **Latest Recorded Entry** | `2026-11-20` |
+| **Recorded Learning Items** | `114` |
+| **Recorded Development Tasks** | `114` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-11-20](../logs/2026-11-20.md)
+
+**Development Highlights:**
+- Defined clear protobuf service contracts for internal inventory and pricing communication.
+- Implemented gRPC unary and server-streaming service handlers with strict deadline propagation.
+- Created automated code-generation build steps compiling .proto files into typed client stubs.
+
+**Learning Highlights:**
+- Studied binary serialization protocols, Protocol Buffers (protobuf), and HTTP/2 multiplexing benefits.
+- Researched gRPC streaming patterns: unary, server-streaming, client-streaming, and bidirectional streaming.
+- Explored service discovery, client-side load balancing, and gRPC deadline propagation.
+
+**Problems Addressed:**
+- Eliminated network bandwidth overhead of verbose JSON payloads, reducing internal payload size by 62%.
+- Fixed head-of-line blocking between internal microservices by leveraging HTTP/2 multiplexed TCP connections.
+
+**Next Steps:**
+- Implement gRPC interceptors for distributed tracing and centralized error handling.
+- Configure envoy proxy for gRPC-web compatibility with browser clients.
 
 ### [2026-11-19](../logs/2026-11-19.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Implement automated dependency vulnerability scanning using Dependabot.
 - Add automated pull request labeling based on changed file paths.
 
-### [2026-11-10](../logs/2026-11-10.md)
-
-**Development Highlights:**
-- Implemented rate-limiting middleware in the API gateway service.
-- Configured sliding-window rate tracking using in-memory and Redis persistence.
-- Added comprehensive automated unit tests for burst traffic and threshold enforcement.
-
-**Learning Highlights:**
-- Studied token bucket and leaky bucket algorithms for distributed API rate limiting.
-- Researched HTTP 429 Too Many Requests response headers (Retry-After, X-RateLimit-Remaining).
-- Explored Redis-backed distributed atomic counters using Lua scripting.
-
-**Problems Addressed:**
-- Resolved race condition in concurrent request quota tracking by replacing GET/SET with an atomic Lua script.
-- Fixed timestamp precision truncation issue in sliding-window interval calculations.
-
-**Next Steps:**
-- Deploy rate limiting middleware to staging environment and conduct load testing with locust.
-- Add per-client API key tier quotas (free vs premium limits).
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-11-20` | [2026-11-20.md](../logs/2026-11-20.md) | 3 | 3 | Complete |
 | `2026-11-19` | [2026-11-19.md](../logs/2026-11-19.md) | 3 | 3 | Complete |
 | `2026-11-18` | [2026-11-18.md](../logs/2026-11-18.md) | 3 | 3 | Complete |
 | `2026-11-17` | [2026-11-17.md](../logs/2026-11-17.md) | 3 | 3 | Complete |
