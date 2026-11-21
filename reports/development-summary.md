@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `38` |
+| **Total Development Logs** | `39` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-11-20` |
-| **Recorded Learning Items** | `114` |
-| **Recorded Development Tasks** | `114` |
+| **Latest Recorded Entry** | `2026-11-21` |
+| **Recorded Learning Items** | `117` |
+| **Recorded Development Tasks** | `117` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-11-21](../logs/2026-11-21.md)
+
+**Development Highlights:**
+- Refactored user billing module into decoupled domain, use-case, and infrastructure layers.
+- Implemented repository pattern interface to abstract direct database ORM dependencies from domain logic.
+- Wrote unit tests verifying core business logic rules without requiring a live database connection.
+
+**Learning Highlights:**
+- Studied Clean Architecture principles: separation of concerns, dependency inversion, and business logic isolation.
+- Researched Domain-Driven Design (DDD) concepts: Entities, Value Objects, Aggregates, Repositories, and Domain Events.
+- Explored hexagonal architecture (Ports and Adapters) for swappable database and messaging adapters.
+
+**Problems Addressed:**
+- Eliminated tight coupling between business discount calculations and database schema representation.
+- Improved test execution speed by 10x by testing pure domain entities using fast in-memory mocks.
+
+**Next Steps:**
+- Migrate order processing service to adopt the new Clean Architecture structure.
+- Document architectural decision records (ADRs) in the repository docs folder.
 
 ### [2026-11-20](../logs/2026-11-20.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Implement task queue depth metrics tracking in Prometheus.
 - Add end-to-end integration tests verifying graceful shutdown handling during worker deployments.
 
-### [2026-11-11](../logs/2026-11-11.md)
-
-**Development Highlights:**
-- Enhanced GitHub Actions workflows with dependency caching for pip and virtual environments.
-- Configured concurrency cancellation groups to terminate outdated PR builds when new commits arrive.
-- Implemented automated validation and duplicate detection scripts with GitHub Step Summary reporting.
-
-**Learning Highlights:**
-- Researched GitHub Actions security best practices: pinned SHA actions, least-privilege token permissions, and environment secrets.
-- Explored CI matrix strategy for testing against multiple Python versions (3.11, 3.12, 3.13).
-- Studied automated semantic versioning, changelog generation, and GitHub release automation.
-
-**Problems Addressed:**
-- Fixed pipeline flakiness caused by unpinned third-party GitHub Actions introducing breaking changes.
-- Cut CI build execution time from 4m 12s down to 1m 05s using cached dependency layers.
-
-**Next Steps:**
-- Implement automated dependency vulnerability scanning using Dependabot.
-- Add automated pull request labeling based on changed file paths.
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-11-21` | [2026-11-21.md](../logs/2026-11-21.md) | 3 | 3 | Complete |
 | `2026-11-20` | [2026-11-20.md](../logs/2026-11-20.md) | 3 | 3 | Complete |
 | `2026-11-19` | [2026-11-19.md](../logs/2026-11-19.md) | 3 | 3 | Complete |
 | `2026-11-18` | [2026-11-18.md](../logs/2026-11-18.md) | 3 | 3 | Complete |
