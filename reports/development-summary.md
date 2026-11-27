@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `44` |
+| **Total Development Logs** | `45` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-11-26` |
-| **Recorded Learning Items** | `132` |
-| **Recorded Development Tasks** | `132` |
+| **Latest Recorded Entry** | `2026-11-27` |
+| **Recorded Learning Items** | `135` |
+| **Recorded Development Tasks** | `135` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-11-27](../logs/2026-11-27.md)
+
+**Development Highlights:**
+- Implemented transactional outbox pattern to guarantee atomic database updates and event publishing.
+- Created event dispatcher service decoupling order fulfillment workflows from user checkout handlers.
+- Added event schema definitions with versioning metadata and published timestamps.
+
+**Learning Highlights:**
+- Studied Event-Driven Architecture (EDA) principles, outbox pattern, and change data capture (CDC).
+- Explored event schema versioning, event sourcing concepts, and eventual consistency guarantees.
+- Researched idempotent event consumers and consumer lag monitoring.
+
+**Problems Addressed:**
+- Eliminated dual-write failure vulnerabilities where database commits succeeded but message publishing failed.
+- Resolved transaction lock contention by moving non-critical notification delivery out of the main database transaction.
+
+**Next Steps:**
+- Implement dead-letter reprocessing tooling for failed event consumers.
+- Benchmark outbox poller throughput and tune batch fetch limits.
 
 ### [2026-11-26](../logs/2026-11-26.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Benchmark cache hit ratio under simulated production traffic loads.
 - Implement Redis cluster failover health monitoring and reconnection backoff.
 
-### [2026-11-17](../logs/2026-11-17.md)
-
-**Development Highlights:**
-- Implemented structured JSON logging across all backend services with correlation ID tracking.
-- Added HTTP request duration histogram metrics and error rate counters exposed on /metrics endpoint.
-- Integrated OpenTelemetry trace context middleware into inbound and outbound HTTP clients.
-
-**Learning Highlights:**
-- Studied the Three Pillars of Observability: structured metrics, distributed traces, and contextualized logs.
-- Researched OpenTelemetry (OTel) instrumentation standards, span propagators, and baggage items.
-- Explored Prometheus metric types: Counter, Gauge, Histogram, and Summary with quantile calculations.
-
-**Problems Addressed:**
-- Eliminated fragmented log lines across microservices by propagating X-Correlation-ID headers across network boundaries.
-- Diagnosed intermittent 504 gateway timeout by tracing downstream third-party payment gateway latency spikes.
-
-**Next Steps:**
-- Build Grafana dashboard visualizing service error rates, p95/p99 latency distributions, and active connections.
-- Configure alertmanager rules for error budget burns and high memory utilization.
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-11-27` | [2026-11-27.md](../logs/2026-11-27.md) | 3 | 3 | Complete |
 | `2026-11-26` | [2026-11-26.md](../logs/2026-11-26.md) | 3 | 3 | Complete |
 | `2026-11-25` | [2026-11-25.md](../logs/2026-11-25.md) | 3 | 3 | Complete |
 | `2026-11-24` | [2026-11-24.md](../logs/2026-11-24.md) | 3 | 3 | Complete |
