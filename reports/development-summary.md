@@ -6,16 +6,36 @@
 
 | Metric | Value |
 |---|---|
-| **Total Development Logs** | `45` |
+| **Total Development Logs** | `46` |
 | **Earliest Recorded Entry** | `2026-10-14` |
-| **Latest Recorded Entry** | `2026-11-27` |
-| **Recorded Learning Items** | `135` |
-| **Recorded Development Tasks** | `135` |
+| **Latest Recorded Entry** | `2026-11-28` |
+| **Recorded Learning Items** | `138` |
+| **Recorded Development Tasks** | `138` |
 | **Entries with Missing Sections** | `0` |
 
 ## Recent Development Activities
 
 Recent entries in reverse chronological order:
+
+### [2026-11-28](../logs/2026-11-28.md)
+
+**Development Highlights:**
+- Implemented structured JSON logging across all backend services with correlation ID tracking.
+- Added HTTP request duration histogram metrics and error rate counters exposed on /metrics endpoint.
+- Integrated OpenTelemetry trace context middleware into inbound and outbound HTTP clients.
+
+**Learning Highlights:**
+- Studied the Three Pillars of Observability: structured metrics, distributed traces, and contextualized logs.
+- Researched OpenTelemetry (OTel) instrumentation standards, span propagators, and baggage items.
+- Explored Prometheus metric types: Counter, Gauge, Histogram, and Summary with quantile calculations.
+
+**Problems Addressed:**
+- Eliminated fragmented log lines across microservices by propagating X-Correlation-ID headers across network boundaries.
+- Diagnosed intermittent 504 gateway timeout by tracing downstream third-party payment gateway latency spikes.
+
+**Next Steps:**
+- Build Grafana dashboard visualizing service error rates, p95/p99 latency distributions, and active connections.
+- Configure alertmanager rules for error budget burns and high memory utilization.
 
 ### [2026-11-27](../logs/2026-11-27.md)
 
@@ -197,30 +217,11 @@ Recent entries in reverse chronological order:
 - Implement dead-letter reprocessing tooling for failed event consumers.
 - Benchmark outbox poller throughput and tune batch fetch limits.
 
-### [2026-11-18](../logs/2026-11-18.md)
-
-**Development Highlights:**
-- Implemented Cache-Aside pattern for frequently accessed product catalog metadata.
-- Added probabilistic early recomputation to prevent simultaneous cache stampede on TTL expiration.
-- Created automated cache invalidation hooks triggered on database mutation events.
-
-**Learning Highlights:**
-- Studied caching topologies: Cache-Aside, Write-Through, Write-Behind, and Refresh-Ahead patterns.
-- Explored cache coherence protocols, thundering herd / cache stampede problems, and probabilistic early expiration (XFetch).
-- Researched Redis data structures: Hashes, Sorted Sets for leaderboards, and HyperLogLog for cardinality.
-
-**Problems Addressed:**
-- Resolved database load spike during flash events by caching compiled query results with 5-minute TTL.
-- Fixed stale data visibility issue where updated user profile settings lagged by several minutes.
-
-**Next Steps:**
-- Benchmark cache hit ratio under simulated production traffic loads.
-- Implement Redis cluster failover health monitoring and reconnection backoff.
-
 ## Complete Logs Index
 
 | Date | Log File | Learning Topics | Dev Tasks | Status |
 |---|---|---|---|---|
+| `2026-11-28` | [2026-11-28.md](../logs/2026-11-28.md) | 3 | 3 | Complete |
 | `2026-11-27` | [2026-11-27.md](../logs/2026-11-27.md) | 3 | 3 | Complete |
 | `2026-11-26` | [2026-11-26.md](../logs/2026-11-26.md) | 3 | 3 | Complete |
 | `2026-11-25` | [2026-11-25.md](../logs/2026-11-25.md) | 3 | 3 | Complete |
